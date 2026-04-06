@@ -1,11 +1,43 @@
-function downloadCSV(data, filename) {
-    const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sales Form</title>
+    <script>
+        function downloadCSV(data, filename = 'data.xlsx') {
+            var csvFile;
+            var downloadLink;
+            
+            // Define the MIME type for Excel files
+            var mimeType = 'application/vnd.ms-excel';
+            
+            // Create a CSV string
+            var csv = data.join('\n');
+            
+            // Create a Blob from the CSV string
+            csvFile = new Blob([csv], { type: mimeType });
+            
+            // Create a link to download the CSV file
+            downloadLink = document.createElement('a');
+            
+            // Create a URL for the Blob
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            
+            // Set the file name to download
+            downloadLink.download = filename;
+            
+            // Append the link to the body
+            document.body.appendChild(downloadLink);
+            
+            // Trigger the download
+            downloadLink.click();
+            
+            // Remove the link after triggering the download
+            document.body.removeChild(downloadLink);
+        }
+    </script>
+</head>
+<body>
+    <h1>Welcome to the Sales Form</h1>
+    <button onclick="downloadCSV(['header1,header2', 'data1,data2'])">Download CSV</button>
+</body>
+</html>
