@@ -1,43 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Sales Form</title>
-    <script>
-        function downloadCSV(data, filename = 'data.xlsx') {
-            var csvFile;
-            var downloadLink;
-            
-            // Define the MIME type for Excel files
-            var mimeType = 'application/vnd.ms-excel';
-            
-            // Create a CSV string
-            var csv = data.join('\n');
-            
-            // Create a Blob from the CSV string
-            csvFile = new Blob([csv], { type: mimeType });
-            
-            // Create a link to download the CSV file
-            downloadLink = document.createElement('a');
-            
-            // Create a URL for the Blob
-            downloadLink.href = window.URL.createObjectURL(csvFile);
-            
-            // Set the file name to download
-            downloadLink.download = filename;
-            
-            // Append the link to the body
-            document.body.appendChild(downloadLink);
-            
-            // Trigger the download
-            downloadLink.click();
-            
-            // Remove the link after triggering the download
-            document.body.removeChild(downloadLink);
-        }
-    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BR Sales Form</title>
 </head>
 <body>
-    <h1>Welcome to the Sales Form</h1>
-    <button onclick="downloadCSV(['header1,header2', 'data1,data2'])">Download CSV</button>
+    <h1>BR Sales Form</h1>
+    <form id="salesForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required>
+        <button type="button" onclick="downloadCSV()">Download CSV</button>
+    </form>
+    <script>
+        function downloadCSV() {
+            let csvContent = 'data:text/csv;charset=utf-8,';
+            // Sample data
+            const rows = [
+                ['Name', 'Amount'],
+                [document.getElementById('name').value, document.getElementById('amount').value]
+            ];
+            rows.forEach(row => {
+                csvContent += row.join(',') + '\n';
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', 'sales_data.xlsx'); // Using .xlsx extension for iOS compatibility
+            link.setAttribute('type', 'application/vnd.ms-excel'); // Setting MIME type for Excel
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
 </body>
 </html>
